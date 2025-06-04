@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import requests
 from bs4 import BeautifulSoup
-import os
+import os  # 🛠️ Вот это важно
 
 app = Flask(__name__)
 
@@ -18,8 +18,7 @@ def hitmo_search():
     result = []
     tracks = bs.find_all("li", {"class": "tracks__item"})
 
-    if tracks:
-        track = tracks[0]  # первая ссылка
+    for track in tracks[:3]:
         title = track.find("div", {"class": "track__title"}).text.strip()
         artist = track.find("div", {"class": "track__desc"}).text.strip()
         length = track.find("div", {"class": "track__fulltime"}).text.strip()
@@ -34,5 +33,5 @@ def hitmo_search():
     return jsonify(result)
 
 if __name__ == "__main__":
+    # ✅ Railway требует запуск через этот порт
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-
